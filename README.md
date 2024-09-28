@@ -3,7 +3,7 @@
 Link do gerador: https://geradordecurriculo.vercel.app/
 
 ## O que é este projeto
-Este é uma API para ajudar desenvolvedores a criar um curriculo simples ATM.
+Este é uma API para ajudar desenvolvedores a criar um curriculo simples ATS.
 
 ## Tecnologias Utilizadas
 - [Front-end](https://github.com/janioofi/curriculo-generator-dashboard)

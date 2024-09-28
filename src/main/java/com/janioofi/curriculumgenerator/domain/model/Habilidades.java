@@ -17,5 +17,6 @@ public class Habilidades {
     private List<Habilidade> backEnd;
     private List<Habilidade> bancoDados;
     private List<Habilidade> pessoais;
+    private List<Habilidade> outros;
 }
 

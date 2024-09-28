@@ -99,6 +99,17 @@ public class CurriculoDocService {
                 run.addBreak();
             }
         }
+
+        // Outras Habilidades
+        if (!habilidades.getOutros().isEmpty()) {
+            run.addBreak();
+            run.setText("Outras Habilidades:");
+            run.addBreak();
+            for (Habilidade outro : habilidades.getOutros()) { // Supondo que "Outros" seja uma lista de Habilidades
+                run.setText(outro.getNome());
+                run.addBreak();
+            }
+        }
     }
 
     private void adicionarExperiencias(XWPFDocument document, List<Experiencia> experiencias) {
@@ -180,56 +191,60 @@ public class CurriculoDocService {
                             if (!curriculo.getHabilidades().getIdiomas().isEmpty()) {
                                 habilidadesText.append("Idiomas: ");
                                 for (Habilidade idioma : curriculo.getHabilidades().getIdiomas()) {
-                                    habilidadesText.append(idioma.getNome());
+                                    habilidadesText.append(idioma.getNome()).append(", "); // Adiciona vírgula
                                 }
+                                habilidadesText.setLength(habilidadesText.length() - 2); // Remove a última vírgula
+                                habilidadesText.append("\n");
                             }
 
                             // Front-end
                             if (!curriculo.getHabilidades().getFrontEnd().isEmpty()) {
-                                if (habilidadesText.length() > 0) habilidadesText.append("\n");
                                 habilidadesText.append("Front-end: ");
                                 for (Habilidade frontEnd : curriculo.getHabilidades().getFrontEnd()) {
                                     habilidadesText.append(frontEnd.getNome()).append(", ");
                                 }
-                                // Remove a última vírgula e espaço
-                                if (habilidadesText.length() > 0) habilidadesText.setLength(habilidadesText.length() - 2);
-                                habilidadesText.append("");
+                                habilidadesText.setLength(habilidadesText.length() - 2); // Remove a última vírgula
+                                habilidadesText.append("\n");
                             }
 
                             // Back-end
                             if (!curriculo.getHabilidades().getBackEnd().isEmpty()) {
-                                if (habilidadesText.length() > 0) habilidadesText.append("\n");
                                 habilidadesText.append("Back-end: ");
                                 for (Habilidade backEnd : curriculo.getHabilidades().getBackEnd()) {
                                     habilidadesText.append(backEnd.getNome()).append(", ");
                                 }
-                                // Remove a última vírgula e espaço
-                                if (habilidadesText.length() > 0) habilidadesText.setLength(habilidadesText.length() - 2);
-                                habilidadesText.append("");
+                                habilidadesText.setLength(habilidadesText.length() - 2); // Remove a última vírgula
+                                habilidadesText.append("\n");
                             }
 
                             // Banco de Dados
                             if (!curriculo.getHabilidades().getBancoDados().isEmpty()) {
-                                if (habilidadesText.length() > 0) habilidadesText.append("\n");
                                 habilidadesText.append("Banco de Dados: ");
                                 for (Habilidade banco : curriculo.getHabilidades().getBancoDados()) {
                                     habilidadesText.append(banco.getNome()).append(", ");
                                 }
-                                // Remove a última vírgula e espaço
-                                if (habilidadesText.length() > 0) habilidadesText.setLength(habilidadesText.length() - 2);
-                                habilidadesText.append("");
+                                habilidadesText.setLength(habilidadesText.length() - 2); // Remove a última vírgula
+                                habilidadesText.append("\n");
                             }
 
                             // Habilidades Pessoais
                             if (!curriculo.getHabilidades().getPessoais().isEmpty()) {
-                                if (habilidadesText.length() > 0) habilidadesText.append("\n");
-                                habilidadesText.append("Habilidades Pessoais: ");
+                                habilidadesText.append("Pessoais: ");
                                 for (Habilidade pessoal : curriculo.getHabilidades().getPessoais()) {
                                     habilidadesText.append(pessoal.getNome()).append(", ");
                                 }
-                                // Remove a última vírgula e espaço
-                                if (habilidadesText.length() > 0) habilidadesText.setLength(habilidadesText.length() - 2);
-                                habilidadesText.append("");
+                                habilidadesText.setLength(habilidadesText.length() - 2); // Remove a última vírgula
+                                habilidadesText.append("\n");
+                            }
+
+                            // Outras Habilidades
+                            if (!curriculo.getHabilidades().getOutros().isEmpty()) {
+                                habilidadesText.append("Outras: ");
+                                for (Habilidade outro : curriculo.getHabilidades().getOutros()) {
+                                    habilidadesText.append(outro.getNome()).append(", ");
+                                }
+                                habilidadesText.setLength(habilidadesText.length() - 2); // Remove a última vírgula
+                                habilidadesText.append("\n");
                             }
 
                             // Substitui {habilidades} se houver conteúdo

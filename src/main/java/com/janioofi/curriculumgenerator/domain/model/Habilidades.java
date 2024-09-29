@@ -1,9 +1,6 @@
 package com.janioofi.curriculumgenerator.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +8,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Habilidades {
     private List<Habilidade> idiomas;
     private List<Habilidade> frontEnd;

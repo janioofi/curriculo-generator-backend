@@ -1,9 +1,6 @@
 package com.janioofi.curriculumgenerator.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +8,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Curriculo {
     private String nomeCompleto;
     private String celular;
@@ -25,4 +23,5 @@ public class Curriculo {
     private Habilidades habilidades;
     private List<Experiencia> experiencias;
     private List<Educacao> educacao;
+    private List<Curso> cursos;
 }

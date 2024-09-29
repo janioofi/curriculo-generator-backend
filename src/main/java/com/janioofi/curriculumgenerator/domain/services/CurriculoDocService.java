@@ -1,7 +1,6 @@
 package com.janioofi.curriculumgenerator.domain.services;
 
 import com.janioofi.curriculumgenerator.domain.model.*;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;

@@ -7,10 +7,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Experiencia {
-    private String cargo;
-    private String empresa;
-    private String mesAnoInicio;
-    private String mesAnoFinal;
+public class Curso {
     private String descricao;
+    private String instituicao;
+    private String anoConclusao;
 }

@@ -1,7 +1,6 @@
 package com.janioofi.curriculumgenerator.domain.services;
 
 import com.janioofi.curriculumgenerator.domain.model.*;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -17,15 +16,12 @@ import java.util.List;
 public class CurriculoDocService {
 
     public byte[] gerarCurriculoDoc(Curriculo curriculo) throws IOException {
-        // Carrega o arquivo .docx existente como modelo a partir de resources
         ClassPathResource resource = new ClassPathResource("base.docx");
         InputStream fis = resource.getInputStream();
         XWPFDocument document = new XWPFDocument(fis);
 
-        // Substitui os placeholders no documento
         substituirTexto(document, curriculo);
 
-        // Converte o documento modificado em bytes
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         document.write(byteArrayOutputStream);
         document.close();
@@ -33,258 +29,144 @@ public class CurriculoDocService {
         return byteArrayOutputStream.toByteArray();
     }
 
-    private void adicionarHabilidades(XWPFDocument document, Habilidades habilidades) {
-        XWPFRun run;
-
-        // Alinhamento à esquerda para habilidades
-        XWPFParagraph habilidadesPara = document.createParagraph();
-        habilidadesPara.setAlignment(ParagraphAlignment.LEFT);
-
-        run = habilidadesPara.createRun();
-        run.setText("HABILIDADES");
-        run.setBold(true);
-        run.addBreak();
-
-        // Idiomas
-        if (!habilidades.getIdiomas().isEmpty()) {
-            run.addBreak();
-            run.setText("Idiomas:");
-            run.addBreak();
-            for (Habilidade idioma : habilidades.getIdiomas()) {
-                run.setText(idioma.getNome());
-                run.addBreak();
-            }
-        }
-
-        // Front-end
-        if (!habilidades.getFrontEnd().isEmpty()) {
-            run.addBreak();
-            run.setText("Front-end:");
-            run.addBreak();
-            for (Habilidade frontEnd : habilidades.getFrontEnd()) {
-                run.setText(frontEnd.getNome());
-                run.addBreak();
-            }
-        }
-
-        // Back-end
-        if (!habilidades.getBackEnd().isEmpty()) {
-            run.addBreak();
-            run.setText("Back-end: ");
-            run.addBreak();
-            for (Habilidade backEnd : habilidades.getBackEnd()) {
-                run.setText(backEnd.getNome());
-                run.addBreak();
-            }
-        }
-
-        // Banco de Dados
-        if (!habilidades.getBancoDados().isEmpty()) {
-            run.addBreak();
-            run.setText("Banco de Dados:");
-            run.addBreak();
-            for (Habilidade banco : habilidades.getBancoDados()) {
-                run.setText(banco.getNome());
-                run.addBreak();
-            }
-        }
-
-        // Habilidades Pessoais
-        if (!habilidades.getPessoais().isEmpty()) {
-            run.addBreak();
-            run.setText("Habilidades Pessoais:");
-            run.addBreak();
-            for (Habilidade pessoal : habilidades.getPessoais()) {
-                run.setText(pessoal.getNome());
-                run.addBreak();
-            }
-        }
-
-        // Outras Habilidades
-        if (!habilidades.getOutros().isEmpty()) {
-            run.addBreak();
-            run.setText("Outras Habilidades:");
-            run.addBreak();
-            for (Habilidade outro : habilidades.getOutros()) { // Supondo que "Outros" seja uma lista de Habilidades
-                run.setText(outro.getNome());
-                run.addBreak();
-            }
-        }
-    }
-
-    private void adicionarExperiencias(XWPFDocument document, List<Experiencia> experiencias) {
-        XWPFParagraph experienciasPara = document.createParagraph();
-        experienciasPara.setAlignment(ParagraphAlignment.LEFT); // Alinhamento à esquerda
-        XWPFRun run = experienciasPara.createRun();
-        run.setText("PROJETOS E EXPERIÊNCIAS");
-        run.setBold(true);
-        run.addBreak();
-
-        for (Experiencia experiencia : experiencias) {
-            run.setText(experiencia.getCargo() + " - " + experiencia.getEmpresa() + " (" + experiencia.getMesAnoInicio() + " - " + experiencia.getMesAnoFinal() + ")");
-            run.addBreak();
-            run.setText("Descrição: " + experiencia.getDescricao());
-            run.addBreak();
-        }
-    }
-
-    private void adicionarEducacao(XWPFDocument document, List<Educacao> educacao) {
-        XWPFParagraph educacaoPara = document.createParagraph();
-        educacaoPara.setAlignment(ParagraphAlignment.LEFT); // Alinhamento à esquerda
-        XWPFRun run = educacaoPara.createRun();
-        run.setText("EDUCAÇÃO");
-        run.setBold(true);
-        run.addBreak();
-
-        for (Educacao educ : educacao) {
-            run.setText(educ.getDescricao() + " - " + educ.getLugar() + " (" + educ.getMesAnoInicio() + " - " + educ.getMesAnoFinal() + ")");
-            run.addBreak();
-        }
-    }
-
     private void substituirTexto(XWPFDocument document, Curriculo curriculo) {
-        // Itera sobre os parágrafos para substituir os textos
-        List<XWPFParagraph> paragraphs = document.getParagraphs();
-        for (XWPFParagraph para : paragraphs) {
+        for (XWPFParagraph para : document.getParagraphs()) {
             List<XWPFRun> runs = para.getRuns();
             if (runs != null) {
                 for (XWPFRun run : runs) {
                     String text = run.getText(0);
                     if (text != null) {
-                        // Substitui {nomeCompleto}, {celular}, {email}, etc.
-                        if (text.contains("{nomeCompleto}")) {
-                            text = text.replace("{nomeCompleto}", curriculo.getNomeCompleto());
-                        }
-                        if (text.contains("{celular}")) {
-                            text = text.replace("{celular}", curriculo.getCelular());
-                        }
-                        if (text.contains("{email}")) {
-                            text = text.replace("{email}", curriculo.getEmail());
-                        }
-                        if (text.contains("{linkedinUsername}")) {
-                            text = text.replace("{linkedinUsername}", curriculo.getLinkedinUsername());
-                        }
-                        if (text.contains("{githubUsername}")) {
-                            text = text.replace("{githubUsername}", curriculo.getGithubUsername());
-                        }
-                        if (text.contains("{bairro}")) {
-                            text = text.replace("{bairro}", curriculo.getBairro());
-                        }
-                        if (text.contains("{cidade}")) {
-                            text = text.replace("{cidade}", curriculo.getCidade());
-                        }
-                        if (text.contains("{estado}")) {
-                            text = text.replace("{estado}", curriculo.getEstado());
-                        }
-                        if (text.contains("{titulo}")) {
-                            text = text.replace("{titulo}", curriculo.getTitulo());
-                        }
-                        if (text.contains("{resumo}")) {
-                            text = text.replace("{resumo}", curriculo.getResumo());
-                        }
+                        text = substituirCamposPessoais(text, curriculo);
+                        text = substituirResumo(text, curriculo);
+                        text = substituirHabilidades(text, curriculo);
+                        text = substituirExperiencias(text, curriculo);
+                        text = substituirEducacao(text, curriculo);
+                        text = substituirCursos(text, curriculo);
 
-                        // Substitui {habilidades}
-                        if (text.contains("{habilidades}")) {
-                            StringBuilder habilidadesText = new StringBuilder();
-
-                            // Idiomas
-                            if (!curriculo.getHabilidades().getIdiomas().isEmpty()) {
-                                habilidadesText.append("Idiomas: ");
-                                for (Habilidade idioma : curriculo.getHabilidades().getIdiomas()) {
-                                    habilidadesText.append(idioma.getNome()).append(", "); // Adiciona vírgula
-                                }
-                                habilidadesText.setLength(habilidadesText.length() - 2); // Remove a última vírgula
-                                habilidadesText.append("\n");
-                            }
-
-                            // Front-end
-                            if (!curriculo.getHabilidades().getFrontEnd().isEmpty()) {
-                                habilidadesText.append("Front-end: ");
-                                for (Habilidade frontEnd : curriculo.getHabilidades().getFrontEnd()) {
-                                    habilidadesText.append(frontEnd.getNome()).append(", ");
-                                }
-                                habilidadesText.setLength(habilidadesText.length() - 2); // Remove a última vírgula
-                                habilidadesText.append("\n");
-                            }
-
-                            // Back-end
-                            if (!curriculo.getHabilidades().getBackEnd().isEmpty()) {
-                                habilidadesText.append("Back-end: ");
-                                for (Habilidade backEnd : curriculo.getHabilidades().getBackEnd()) {
-                                    habilidadesText.append(backEnd.getNome()).append(", ");
-                                }
-                                habilidadesText.setLength(habilidadesText.length() - 2); // Remove a última vírgula
-                                habilidadesText.append("\n");
-                            }
-
-                            // Banco de Dados
-                            if (!curriculo.getHabilidades().getBancoDados().isEmpty()) {
-                                habilidadesText.append("Banco de Dados: ");
-                                for (Habilidade banco : curriculo.getHabilidades().getBancoDados()) {
-                                    habilidadesText.append(banco.getNome()).append(", ");
-                                }
-                                habilidadesText.setLength(habilidadesText.length() - 2); // Remove a última vírgula
-                                habilidadesText.append("\n");
-                            }
-
-                            // Habilidades Pessoais
-                            if (!curriculo.getHabilidades().getPessoais().isEmpty()) {
-                                habilidadesText.append("Pessoais: ");
-                                for (Habilidade pessoal : curriculo.getHabilidades().getPessoais()) {
-                                    habilidadesText.append(pessoal.getNome()).append(", ");
-                                }
-                                habilidadesText.setLength(habilidadesText.length() - 2); // Remove a última vírgula
-                                habilidadesText.append("\n");
-                            }
-
-                            // Outras Habilidades
-                            if (!curriculo.getHabilidades().getOutros().isEmpty()) {
-                                habilidadesText.append("Outras: ");
-                                for (Habilidade outro : curriculo.getHabilidades().getOutros()) {
-                                    habilidadesText.append(outro.getNome()).append(", ");
-                                }
-                                habilidadesText.setLength(habilidadesText.length() - 2); // Remove a última vírgula
-                                habilidadesText.append("\n");
-                            }
-
-                            // Substitui {habilidades} se houver conteúdo
-                            if (habilidadesText.length() > 0) {
-                                text = text.replace("{habilidades}", habilidadesText.toString());
-                            } else {
-                                text = text.replace("{habilidades}", ""); // Remove o placeholder se não houver habilidades
-                            }
-                        }
-
-                        // Substitui {experiencias}
-                        if (text.contains("{experiencias}")) {
-                            StringBuilder experienciasText = new StringBuilder();
-                            for (Experiencia experiencia : curriculo.getExperiencias()) {
-                                experienciasText.append(experiencia.getCargo()).append(" - ")
-                                        .append(experiencia.getEmpresa()).append(" (")
-                                        .append(experiencia.getMesAnoInicio()).append(" - ")
-                                        .append(experiencia.getMesAnoFinal()).append(")\n")
-                                        .append("Descrição: ").append(experiencia.getDescricao()).append("\n\n");
-                            }
-                            text = text.replace("{experiencias}", experienciasText.toString());
-                        }
-
-                        // Substitui {educacao}
-                        if (text.contains("{educacao}")) {
-                            StringBuilder educacaoText = new StringBuilder();
-                            for (Educacao educ : curriculo.getEducacao()) {
-                                educacaoText.append(educ.getDescricao()).append(" - ")
-                                        .append(educ.getLugar()).append(" (")
-                                        .append(educ.getMesAnoInicio()).append(" - ")
-                                        .append(educ.getMesAnoFinal()).append(")\n");
-                            }
-                            text = text.replace("{educacao}", educacaoText.toString());
-                        }
-
-                        // Atualiza o texto no run
                         run.setText(text, 0);
                     }
                 }
             }
         }
+    }
+
+    private String substituirCamposPessoais(String text, Curriculo curriculo) {
+        text = text.replace("nomeCompleto", curriculo.getNomeCompleto());
+        text = text.replace("celular", curriculo.getCelular());
+        text = text.replace("email", curriculo.getEmail());
+        text = text.replace("linkedinUsername", "https://www.linkedin.com/in/" + curriculo.getLinkedinUsername());
+        text = text.replace("githubUsername", "https://github.com/" + curriculo.getGithubUsername());
+
+        text = text.replace("bairro", curriculo.getBairro().isEmpty() ? "" : curriculo.getBairro() + ", ");
+        text = text.replace("cidade", curriculo.getCidade().isEmpty() ? "" : curriculo.getCidade() + " - ");
+        text = text.replace("estado", curriculo.getEstado().isEmpty() ? "" : curriculo.getEstado());
+
+        text = text.replace("titulo", curriculo.getTitulo());
+
+        return text;
+    }
+
+    private String substituirResumo(String text, Curriculo curriculo) {
+        if (!curriculo.getResumo().isEmpty()) {
+            text = text.replace("resumoCorpo", curriculo.getResumo());
+            text = text.replace("resumoTitulo", "RESUMO");
+        } else {
+            text = text.replace("resumoCorpo", "");
+            text = text.replace("resumoTitulo", "");
+        }
+        return text;
+    }
+
+    private String substituirHabilidades(String text, Curriculo curriculo) {
+        Habilidades habilidades = curriculo.getHabilidades();
+        if (!habilidades.getBancoDados().isEmpty() ||
+                !habilidades.getPessoais().isEmpty() ||
+                !habilidades.getFrontEnd().isEmpty() ||
+                !habilidades.getBackEnd().isEmpty() ||
+                !habilidades.getOutros().isEmpty() ||
+                !habilidades.getIdiomas().isEmpty()) {
+
+            text = text.replace("habilidadesTitulo", "HABILIDADES");
+            StringBuilder habilidadesText = new StringBuilder();
+
+            // Adiciona cada categoria de habilidades em uma linha separada
+            adicionarHabilidadesCategoria(habilidadesText, "\nIdiomas", habilidades.getIdiomas());
+            adicionarHabilidadesCategoria(habilidadesText, "\nFront-end", habilidades.getFrontEnd());
+            adicionarHabilidadesCategoria(habilidadesText, "\nBack-end", habilidades.getBackEnd());
+            adicionarHabilidadesCategoria(habilidadesText, "\nBanco de Dados", habilidades.getBancoDados());
+            adicionarHabilidadesCategoria(habilidadesText, "\nPessoais", habilidades.getPessoais());
+            adicionarHabilidadesCategoria(habilidadesText, "\nOutras", habilidades.getOutros());
+
+            // Substitui o texto no documento
+            text = text.replace("habilidadesCorpo", habilidadesText.toString().trim());
+        } else {
+            text = text.replace("habilidadesTitulo", "");
+            text = text.replace("habilidadesCorpo", "");
+        }
+        return text;
+    }
+
+    private void adicionarHabilidadesCategoria(StringBuilder habilidadesText, String titulo, List<Habilidade> habilidades) {
+        if (!habilidades.isEmpty()) {
+            habilidadesText.append(titulo).append(": "); // Adiciona o título da categoria
+            for (Habilidade habilidade : habilidades) {
+                habilidadesText.append(habilidade.getNome()).append(", "); // Adiciona cada habilidade
+            }
+            habilidadesText.setLength(habilidadesText.length() - 2); // Remove a última vírgula e espaço
+        }
+    }
+
+    private String substituirExperiencias(String text, Curriculo curriculo) {
+        if (!curriculo.getExperiencias().isEmpty()) {
+            text = text.replace("projetosExperienciasTitulo", "PROJETOS E EXPERIÊNCIAS");
+            StringBuilder experienciasText = new StringBuilder();
+            for (Experiencia experiencia : curriculo.getExperiencias()) {
+                experienciasText.append(experiencia.getCargo()).append(" - ")
+                        .append(experiencia.getEmpresa()).append(" (")
+                        .append(experiencia.getMesAnoInicio()).append(" - ")
+                        .append(experiencia.getMesAnoFinal()).append(")\n")
+                        .append("Descrição: ").append(experiencia.getDescricao()).append("\n\n");
+            }
+            text = text.replace("projetosExperienciasCorpo", experienciasText.toString());
+        } else {
+            text = text.replace("projetosExperienciasTitulo", "");
+            text = text.replace("projetosExperienciasCorpo", "");
+        }
+        return text;
+    }
+
+    private String substituirEducacao(String text, Curriculo curriculo) {
+        if (!curriculo.getEducacao().isEmpty()) {
+            text = text.replace("educacaoTitulo", "EDUCAÇÃO");
+            StringBuilder educacaoText = new StringBuilder();
+            for (Educacao educ : curriculo.getEducacao()) {
+                educacaoText.append(educ.getDescricao()).append(" - ")
+                        .append(educ.getLugar()).append(" (")
+                        .append(educ.getMesAnoInicio()).append(" - ")
+                        .append(educ.getMesAnoFinal()).append(")\n");
+            }
+            text = text.replace("educacaoCorpo", educacaoText.toString());
+        } else {
+            text = text.replace("educacaoTitulo", "");
+            text = text.replace("educacaoCorpo", "");
+        }
+        return text;
+    }
+
+    private String substituirCursos(String text, Curriculo curriculo) {
+        if (!curriculo.getCursos().isEmpty()) {
+            text = text.replace("cursosCertificacoesTitulo", "CURSOS E CERTIFICAÇÕES");
+            StringBuilder cursoText = new StringBuilder();
+            for (Curso curso : curriculo.getCursos()) {
+                cursoText.append(curso.getDescricao()).append(" - ")
+                        .append(curso.getInstituicao()).append(" (")
+                        .append(curso.getAnoConclusao()).append(")\n");
+            }
+            text = text.replace("cursosCertificacoesCorpo", cursoText.toString());
+        } else {
+            text = text.replace("cursosCertificacoesTitulo", "");
+            text = text.replace("cursosCertificacoesCorpo", "");
+        }
+        return text;
     }
 }

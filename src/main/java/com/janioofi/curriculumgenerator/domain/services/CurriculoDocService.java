@@ -55,8 +55,8 @@ public class CurriculoDocService {
         text = text.replace("nomeCompleto", curriculo.getNomeCompleto());
         text = text.replace("celular", curriculo.getCelular());
         text = text.replace("email", curriculo.getEmail());
-        text = text.replace("linkedinUsername", curriculo.getLinkedinUsername());
-        text = text.replace("githubUsername", curriculo.getGithubUsername());
+        text = text.replace("linkedinUsername", "https://www.linkedin.com/in/" + curriculo.getLinkedinUsername());
+        text = text.replace("githubUsername", "https://github.com/" + curriculo.getGithubUsername());
 
         text = text.replace("bairro", curriculo.getBairro().isEmpty() ? "" : curriculo.getBairro() + ", ");
         text = text.replace("cidade", curriculo.getCidade().isEmpty() ? "" : curriculo.getCidade() + " - ");
@@ -91,12 +91,12 @@ public class CurriculoDocService {
             StringBuilder habilidadesText = new StringBuilder();
 
             // Adiciona cada categoria de habilidades em uma linha separada
-            adicionarHabilidadesCategoria(habilidadesText, "Idiomas", habilidades.getIdiomas());
-            adicionarHabilidadesCategoria(habilidadesText, "Front-end", habilidades.getFrontEnd());
-            adicionarHabilidadesCategoria(habilidadesText, "Back-end", habilidades.getBackEnd());
-            adicionarHabilidadesCategoria(habilidadesText, "Banco de Dados", habilidades.getBancoDados());
-            adicionarHabilidadesCategoria(habilidadesText, "Pessoais", habilidades.getPessoais());
-            adicionarHabilidadesCategoria(habilidadesText, "Outras", habilidades.getOutros());
+            adicionarHabilidadesCategoria(habilidadesText, "\nIdiomas", habilidades.getIdiomas());
+            adicionarHabilidadesCategoria(habilidadesText, "\nFront-end", habilidades.getFrontEnd());
+            adicionarHabilidadesCategoria(habilidadesText, "\nBack-end", habilidades.getBackEnd());
+            adicionarHabilidadesCategoria(habilidadesText, "\nBanco de Dados", habilidades.getBancoDados());
+            adicionarHabilidadesCategoria(habilidadesText, "\nPessoais", habilidades.getPessoais());
+            adicionarHabilidadesCategoria(habilidadesText, "\nOutras", habilidades.getOutros());
 
             // Substitui o texto no documento
             text = text.replace("habilidadesCorpo", habilidadesText.toString().trim());
